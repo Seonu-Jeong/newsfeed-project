@@ -12,8 +12,9 @@ public class Board extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(columnDefinition = "tinytext")
     private String postBody;
@@ -28,5 +29,5 @@ public class Board extends BaseEntity{
         this.postBody = postBody;
         this.postImage = postImage;
 
-
+    }
 }

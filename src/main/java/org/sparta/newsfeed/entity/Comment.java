@@ -28,6 +28,5 @@ public class Comment extends BaseEntity {
 //    private Board board;
 
     @OneToMany(mappedBy = "comment",cascade = CascadeType.ALL)
-    @JoinColumn(name = "commentLike_id")
     private List<CommentLike> commentLike;
 }

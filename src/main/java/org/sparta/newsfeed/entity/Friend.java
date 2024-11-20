@@ -13,11 +13,11 @@ public class Friend {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "posted_user_id")
     private User postedUser;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "requested_user_id")
     private User requestedUser;
 
