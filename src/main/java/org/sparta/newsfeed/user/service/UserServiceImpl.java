@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import static org.sparta.newsfeed.user.dto.UpdateRequestDto.isSamePassword;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -63,7 +65,9 @@ public class UserServiceImpl implements UserService {
 
         //비밀번호 수정 -> oldPassword, newPassword 는 둘다 입력될 경우에만 수정
         if (requestDto.getOldPassword() != null && requestDto.getNewPassword() != null) {
-            //oldPassword 를 데이터의 password 와 비교한 후 newPassword를 encode 하여 변경
+            //기존 비밀번호와 새 비밀번호 비교
+            isSamePassword(requestDto);
+            //oldPassword 를 데이터의 password 와 비교한 후 newPassword 를 encode 하여 변경
             if (passwordEncoder.matches(requestDto.getOldPassword(), user.getPassword())) {
                 user.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
             } else {
