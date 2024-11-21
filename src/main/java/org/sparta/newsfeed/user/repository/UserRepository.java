@@ -18,5 +18,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인할 수 없습니다."));
     };
 
+    default User findByIdOrElseThrow(Long userId){
+        return findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "유효하지 않은 Id입니다."));
+    };
+
 
 }

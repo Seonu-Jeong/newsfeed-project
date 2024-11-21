@@ -29,7 +29,7 @@ public class User extends BaseEntity {
     private String userImage;
 
     @Column(length = 30)
-    private String comment;
+    private String selfComment;
 
     @Column(length = 20)
     private String status;
