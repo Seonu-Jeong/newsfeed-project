@@ -1,4 +1,4 @@
-package org.sparta.newsfeed.comment;
+package org.sparta.newsfeed.comment.repository;
 
 import org.sparta.newsfeed.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
