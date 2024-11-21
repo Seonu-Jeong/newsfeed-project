@@ -21,7 +21,7 @@ public class UserController {
 
     //회원 가입
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponseDto> signup (@Valid @RequestBody SignupRequestDto requestDto) {
+    public ResponseEntity<SignupResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto) {
 
         SignupResponseDto signupResponseDto = userService.signup(requestDto.getEmail(), requestDto.getPassword(), requestDto.getNickname());
 
@@ -71,7 +71,7 @@ public class UserController {
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId, @Valid @RequestBody UpdateRequestDto requestDto) {
         UserResponseDto updateUserDto = userService.updateUser(userId, requestDto);
 
-        return new ResponseEntity<>(updateUserDto,HttpStatus.OK);
+        return new ResponseEntity<>(updateUserDto, HttpStatus.OK);
     }
 
 }
