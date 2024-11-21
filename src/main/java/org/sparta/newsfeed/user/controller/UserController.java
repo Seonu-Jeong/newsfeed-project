@@ -68,20 +68,23 @@ public class UserController {
     }
 
     //유저 수정
-    @PatchMapping("/{userId}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId, @Valid @RequestBody UpdateRequestDto requestDto) {
+    @PatchMapping("/modify")
+    public ResponseEntity<UserResponseDto> updateUser(
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @Valid @RequestBody UpdateRequestDto requestDto
+    ) {
         UserResponseDto updateUserDto = userService.updateUser(userId, requestDto);
 
         return new ResponseEntity<>(updateUserDto, HttpStatus.OK);
     }
 
+    //회원탈퇴
     @DeleteMapping("/withdraw")
     public ResponseEntity<Void> deleteUser(
             @SessionAttribute(name = Const.LOGIN_USER) Long userId,
             @Valid @RequestBody DeleteUserRequestDto requestDto,
             HttpServletRequest servletRequest
     ) {
-
         userService.deleteUser(userId, requestDto);
 
         //세션 로그아웃
