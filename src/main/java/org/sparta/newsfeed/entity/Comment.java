@@ -23,9 +23,9 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @ManyToOne
-//    @JoinColumn(name = "board_id")
-//    private Board board;
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     @OneToMany(mappedBy = "comment",cascade = CascadeType.ALL)
     private List<CommentLike> commentLike;
