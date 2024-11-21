@@ -5,10 +5,11 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.sparta.newsfeed.constant.Const;
 import org.sparta.newsfeed.friend.dto.ErrorResponseDto;
+import org.sparta.newsfeed.friend.dto.FriendRelationResponseDto;
 import org.sparta.newsfeed.friend.dto.RequestAcceptResponseDto;
-import org.sparta.newsfeed.friend.dto.RequestFriendResponseDto;
+import org.sparta.newsfeed.friend.dto.FriendResponseDto;
+import org.sparta.newsfeed.friend.exception.AlreadyExistException;
 import org.sparta.newsfeed.friend.exception.NoAuthorizationException;
-import org.sparta.newsfeed.friend.dto.UserFriendResponseDto;
 import org.sparta.newsfeed.friend.exception.NoExistException;
 import org.sparta.newsfeed.friend.service.FriendService;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class FriendController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{targetId}")
-    public List<UserFriendResponseDto> getUsersFriendList(
+    public List<FriendRelationResponseDto> getUsersFriendList(
         @PathVariable Long targetId,
         HttpServletRequest request
     ){
@@ -57,7 +58,7 @@ public class FriendController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/requests/{userId}")
-    public List<RequestFriendResponseDto> getRequestFriendList(
+    public List<FriendResponseDto> getRequestFriendList(
             @PathVariable Long userId,
             HttpServletRequest request
     ){
@@ -144,5 +145,10 @@ public class FriendController {
     @ExceptionHandler({NoExistException.class})
     public ResponseEntity<ErrorResponseDto> noExistExceptionHandler(Exception e){
         return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({AlreadyExistException.class})
+    public ResponseEntity<ErrorResponseDto> alreadyExistExceptionHandler(Exception e){
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
