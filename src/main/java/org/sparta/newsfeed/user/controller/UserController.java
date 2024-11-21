@@ -9,6 +9,7 @@ import org.sparta.newsfeed.user.dto.*;
 import org.sparta.newsfeed.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -57,12 +58,20 @@ public class UserController {
     }
 
     //유저 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> findUserById(@PathVariable(name = "id") Long userId) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponseDto> findUserById(@PathVariable Long userId) {
 
         UserResponseDto foundUserDto = userService.findUserById(userId);
 
         return new ResponseEntity<>(foundUserDto, HttpStatus.OK);
+    }
+
+    //유저 수정
+    @PatchMapping("/{userId}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId, @Valid @RequestBody UpdateRequestDto requestDto) {
+        UserResponseDto updateUserDto = userService.updateUser(userId, requestDto);
+
+        return new ResponseEntity<>(updateUserDto,HttpStatus.OK);
     }
 
 }
