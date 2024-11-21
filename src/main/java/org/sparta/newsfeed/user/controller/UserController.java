@@ -1,11 +1,9 @@
 package org.sparta.newsfeed.user.controller;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.connector.Response;
 import org.sparta.newsfeed.constant.Const;
 import org.sparta.newsfeed.user.dto.*;
 import org.sparta.newsfeed.user.service.UserService;
