@@ -11,10 +11,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail (String email);
 
-    Optional<User> findByEmailAndPassword(String email, String password);
+    Optional<User> findByEmail(String email);
 
-    default User findByEmailAndPasswordOrElse(String email, String password) {
-        return findByEmailAndPassword(email, password)
+    default User findByEmailOrElseThrow(String email) {
+        return findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인할 수 없습니다."));
     };
 

@@ -33,10 +33,10 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequestDto requestdto, HttpServletRequest servletRequest) {
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequestDto requestDto, HttpServletRequest servletRequest) {
 
         //이메일, 비밀번호 확인
-        LoginResponseDto loginDto = userService.login(requestdto.getEmail(), requestdto.getPassword());
+        LoginResponseDto loginDto = userService.login(requestDto.getEmail(), requestDto.getPassword());
 
         //세션요청
         HttpSession session = servletRequest.getSession();
