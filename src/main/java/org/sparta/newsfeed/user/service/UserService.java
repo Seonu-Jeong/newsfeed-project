@@ -2,6 +2,7 @@ package org.sparta.newsfeed.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.sparta.newsfeed.entity.User;
+import org.sparta.newsfeed.user.dto.LoginResponseDto;
 import org.sparta.newsfeed.user.dto.SignupResponseDto;
 import org.sparta.newsfeed.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,13 @@ public class UserService {
 
         return new SignupResponseDto(savedUser.getEmail(), savedUser.getNickname());
 
+    }
+
+    public LoginResponseDto login (String email, String password) {
+
+        User loginUser = userRepository.findByEmailAndPasswordOrElse(email, password);
+
+        return new LoginResponseDto(loginUser.getId());
     }
 
 }
