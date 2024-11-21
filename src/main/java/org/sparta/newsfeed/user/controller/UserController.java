@@ -49,4 +49,18 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest servletRequest) {
+
+        HttpSession session = servletRequest.getSession(false);
+
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
 }
