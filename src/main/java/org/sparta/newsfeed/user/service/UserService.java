@@ -4,9 +4,9 @@ import org.sparta.newsfeed.user.dto.*;
 
 public interface UserService {
 
-    SignupResponseDto signup (String email, String password, String nickname);
+    SignupResponseDto signup (SignupRequestDto requestDto);
 
-    LoginResponseDto login(String email, String password);
+    LoginResponseDto login(LoginRequestDto requestDto);
 
     UserResponseDto findUserById(Long userId);
 

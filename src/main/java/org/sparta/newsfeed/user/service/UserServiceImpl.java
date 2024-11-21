@@ -17,15 +17,15 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public SignupResponseDto signup(String email, String password, String nickname) {
+    public SignupResponseDto signup(SignupRequestDto requestDto) {
 
-        if (userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하는 이메일입니다.");
         }
 
-        String encodedPassword = passwordEncoder.encode(password);
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        User user = new User(email, encodedPassword, nickname);
+        User user = new User(requestDto.getEmail(), encodedPassword, requestDto.getNickname());
 
         User savedUser = userRepository.save(user);
 
@@ -33,11 +33,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public LoginResponseDto login(String email, String password) {
+    public LoginResponseDto login(LoginRequestDto requestDto) {
 
-        User loginUser = userRepository.findByEmailOrElseThrow(email);
+        User loginUser = userRepository.findByEmailOrElseThrow(requestDto.getEmail());
 
-        if (!passwordEncoder.matches(password, loginUser.getPassword())) {
+        if (!passwordEncoder.matches(requestDto.getPassword(), loginUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호를 확인하세요.");
         }
 
