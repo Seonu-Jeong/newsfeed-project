@@ -7,23 +7,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public class SignupRequestDto {
+@AllArgsConstructor
+public class LoginRequestDto {
 
     @NotNull
     @Email(message = "이메일 형식이 아닙니다.")
-    private String email;
+    private final String email;
 
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,}$",
             message = "비밀번호 형식이 올바르지 않습니다. 8자 이상, 대소문자 포함, 숫자 및 특수문자(@$!%*?&#) 포함")
-    private String password;
+    private final String password;
 
-    @NotNull
-    private String nickname;
-
-    public SignupRequestDto(String email, String password, String nickname) {
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-    }
 }
