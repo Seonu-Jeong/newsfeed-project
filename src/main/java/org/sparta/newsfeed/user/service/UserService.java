@@ -1,9 +1,6 @@
 package org.sparta.newsfeed.user.service;
 
-import org.sparta.newsfeed.user.dto.LoginResponseDto;
-import org.sparta.newsfeed.user.dto.SignupResponseDto;
-import org.sparta.newsfeed.user.dto.UpdateRequestDto;
-import org.sparta.newsfeed.user.dto.UserResponseDto;
+import org.sparta.newsfeed.user.dto.*;
 
 public interface UserService {
 
@@ -15,4 +12,5 @@ public interface UserService {
 
     UserResponseDto updateUser(Long userId, UpdateRequestDto requestDto);
 
+    void deleteUser(Long userId, DeleteUserRequestDto requestDto);
 }

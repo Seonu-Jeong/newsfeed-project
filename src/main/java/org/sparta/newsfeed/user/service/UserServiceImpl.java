@@ -3,15 +3,11 @@ package org.sparta.newsfeed.user.service;
 import lombok.RequiredArgsConstructor;
 import org.sparta.newsfeed.config.PasswordEncoder;
 import org.sparta.newsfeed.entity.User;
-import org.sparta.newsfeed.user.dto.LoginResponseDto;
-import org.sparta.newsfeed.user.dto.SignupResponseDto;
-import org.sparta.newsfeed.user.dto.UpdateRequestDto;
-import org.sparta.newsfeed.user.dto.UserResponseDto;
+import org.sparta.newsfeed.user.dto.*;
 import org.sparta.newsfeed.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -79,6 +75,19 @@ public class UserServiceImpl implements UserService {
         }
 
         return new UserResponseDto(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId, DeleteUserRequestDto requestDto) {
+
+        User user = userRepository.findByIdOrElseThrow(userId);
+
+        if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
+            userRepository.delete(user);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong Password.");
+        }
+
     }
 
 

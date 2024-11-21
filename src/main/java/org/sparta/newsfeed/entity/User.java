@@ -4,6 +4,8 @@ package org.sparta.newsfeed.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "user")
+@SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ?")
+@SQLRestriction("deleted = false")
 public class User extends BaseEntity {
 
     @Id
@@ -33,8 +37,7 @@ public class User extends BaseEntity {
     @Column(length = 30)
     private String selfComment;
 
-    @Column(length = 20)
-    private String status;
+    private boolean deleted = Boolean.FALSE;
 
     //1:N 연관관계 -> 유저가 삭제될 경우 작성한 게시글이 모두 삭제
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)

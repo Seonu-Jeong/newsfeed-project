@@ -11,7 +11,7 @@ public class SignupRequestDto {
 
     @NotNull
     @Email(message = "이메일 형식이 아닙니다.")
-    private String email;
+    private final String email;
 
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,}$",

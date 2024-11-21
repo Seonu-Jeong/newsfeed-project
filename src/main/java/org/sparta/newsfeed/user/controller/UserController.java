@@ -1,9 +1,11 @@
 package org.sparta.newsfeed.user.controller;
 
+import jakarta.persistence.metamodel.SetAttribute;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 import org.sparta.newsfeed.constant.Const;
 import org.sparta.newsfeed.user.dto.*;
 import org.sparta.newsfeed.user.service.UserService;
@@ -72,6 +74,22 @@ public class UserController {
         UserResponseDto updateUserDto = userService.updateUser(userId, requestDto);
 
         return new ResponseEntity<>(updateUserDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/withdraw") //patch로 해야할까?
+    public ResponseEntity<Void> deleteUser(
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @Valid @RequestBody DeleteUserRequestDto requestDto,
+            HttpServletRequest servletRequest
+    ) {
+
+        userService.deleteUser(userId, requestDto);
+
+        //세션 로그아웃
+        HttpSession session = servletRequest.getSession(false);
+        session.invalidate();
+
+        return  new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
