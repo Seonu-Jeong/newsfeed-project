@@ -42,7 +42,8 @@ public class FriendController {
 
         Long loginUserId = (Long)session.getAttribute(Const.LOGIN_USER);
 
-        return friendService.findUsersFriendList(targetId, loginUserId);
+        //return friendService.findUsersFriendList(targetId, loginUserId);
+        return null;
     }
 
 
@@ -68,7 +69,8 @@ public class FriendController {
             throw new NoAuthorizationException("로그인 사용자와 일치하지 않은 아이디입니다.");
         }
 
-        return friendService.findRequestFriends(userId);
+        //return friendService.findRequestFriends(userId);
+        return null;
     }
 
 
@@ -88,7 +90,8 @@ public class FriendController {
 
         Long loginUserId = (Long)session.getAttribute(Const.LOGIN_USER);
 
-        friendService.sendFriendRequest(targetId, loginUserId);
+        //friendService.sendFriendRequest(targetId, loginUserId);
+
     }
 
 
@@ -110,7 +113,8 @@ public class FriendController {
 
         Long loginUserId = (Long)session.getAttribute(Const.LOGIN_USER);
 
-        return friendService.acceptRequest(targetId, loginUserId);
+        //return friendService.acceptRequest(targetId, loginUserId);
+        return null;
     }
 
     /**
@@ -129,7 +133,7 @@ public class FriendController {
 
         Long loginUserId = (Long)session.getAttribute(Const.LOGIN_USER);
 
-        friendService.refuseRequset(targetId, loginUserId);
+        //friendService.refuseRequset(targetId, loginUserId);
     }
 
     @ExceptionHandler({NoAuthorizationException.class})
