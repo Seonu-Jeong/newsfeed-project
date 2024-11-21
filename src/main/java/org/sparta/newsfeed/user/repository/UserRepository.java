@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     default User findByEmailOrElseThrow(String email) {
         return findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인할 수 없습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
     };
 
     default User findByIdOrElseThrow(Long userId){

@@ -3,15 +3,11 @@ package org.sparta.newsfeed.user.service;
 import lombok.RequiredArgsConstructor;
 import org.sparta.newsfeed.config.PasswordEncoder;
 import org.sparta.newsfeed.entity.User;
-import org.sparta.newsfeed.user.dto.LoginResponseDto;
-import org.sparta.newsfeed.user.dto.SignupResponseDto;
-import org.sparta.newsfeed.user.dto.UpdateRequestDto;
-import org.sparta.newsfeed.user.dto.UserResponseDto;
+import org.sparta.newsfeed.user.dto.*;
 import org.sparta.newsfeed.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -21,15 +17,15 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public SignupResponseDto signup(String email, String password, String nickname) {
+    public SignupResponseDto signup(SignupRequestDto requestDto) {
 
-        if (userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하는 이메일입니다.");
         }
 
-        String encodedPassword = passwordEncoder.encode(password);
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        User user = new User(email, encodedPassword, nickname);
+        User user = new User(requestDto.getEmail(), encodedPassword, requestDto.getNickname());
 
         User savedUser = userRepository.save(user);
 
@@ -37,11 +33,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public LoginResponseDto login(String email, String password) {
+    public LoginResponseDto login(LoginRequestDto requestDto) {
 
-        User loginUser = userRepository.findByEmailOrElseThrow(email);
+        User loginUser = userRepository.findByEmailOrElseThrow(requestDto.getEmail());
 
-        if (!passwordEncoder.matches(password, loginUser.getPassword())) {
+        if (!passwordEncoder.matches(requestDto.getPassword(), loginUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호를 확인하세요.");
         }
 
@@ -79,6 +75,19 @@ public class UserServiceImpl implements UserService {
         }
 
         return new UserResponseDto(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId, DeleteUserRequestDto requestDto) {
+
+        User user = userRepository.findByIdOrElseThrow(userId);
+
+        if (passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
+            userRepository.delete(user);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong Password.");
+        }
+
     }
 
 

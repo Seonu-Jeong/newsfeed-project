@@ -1,15 +1,16 @@
 package org.sparta.newsfeed.user.controller;
 
+import jakarta.persistence.metamodel.SetAttribute;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 import org.sparta.newsfeed.constant.Const;
 import org.sparta.newsfeed.user.dto.*;
 import org.sparta.newsfeed.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,7 +24,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<SignupResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto) {
 
-        SignupResponseDto signupResponseDto = userService.signup(requestDto.getEmail(), requestDto.getPassword(), requestDto.getNickname());
+        SignupResponseDto signupResponseDto = userService.signup(requestDto);
 
         return new ResponseEntity<>(signupResponseDto, HttpStatus.CREATED);
     }
@@ -33,7 +34,7 @@ public class UserController {
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequestDto requestDto, HttpServletRequest servletRequest) {
 
         //이메일, 비밀번호 확인
-        LoginResponseDto loginDto = userService.login(requestDto.getEmail(), requestDto.getPassword());
+        LoginResponseDto loginDto = userService.login(requestDto);
 
         //세션요청
         HttpSession session = servletRequest.getSession();
@@ -67,11 +68,30 @@ public class UserController {
     }
 
     //유저 수정
-    @PatchMapping("/{userId}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId, @Valid @RequestBody UpdateRequestDto requestDto) {
+    @PatchMapping("/modify")
+    public ResponseEntity<UserResponseDto> updateUser(
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @Valid @RequestBody UpdateRequestDto requestDto
+    ) {
         UserResponseDto updateUserDto = userService.updateUser(userId, requestDto);
 
         return new ResponseEntity<>(updateUserDto, HttpStatus.OK);
+    }
+
+    //회원탈퇴
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<Void> deleteUser(
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @Valid @RequestBody DeleteUserRequestDto requestDto,
+            HttpServletRequest servletRequest
+    ) {
+        userService.deleteUser(userId, requestDto);
+
+        //세션 로그아웃
+        HttpSession session = servletRequest.getSession(false);
+        session.invalidate();
+
+        return  new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

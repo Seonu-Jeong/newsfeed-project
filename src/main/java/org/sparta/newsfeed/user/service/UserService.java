@@ -1,18 +1,16 @@
 package org.sparta.newsfeed.user.service;
 
-import org.sparta.newsfeed.user.dto.LoginResponseDto;
-import org.sparta.newsfeed.user.dto.SignupResponseDto;
-import org.sparta.newsfeed.user.dto.UpdateRequestDto;
-import org.sparta.newsfeed.user.dto.UserResponseDto;
+import org.sparta.newsfeed.user.dto.*;
 
 public interface UserService {
 
-    SignupResponseDto signup (String email, String password, String nickname);
+    SignupResponseDto signup (SignupRequestDto requestDto);
 
-    LoginResponseDto login(String email, String password);
+    LoginResponseDto login(LoginRequestDto requestDto);
 
     UserResponseDto findUserById(Long userId);
 
     UserResponseDto updateUser(Long userId, UpdateRequestDto requestDto);
 
+    void deleteUser(Long userId, DeleteUserRequestDto requestDto);
 }
