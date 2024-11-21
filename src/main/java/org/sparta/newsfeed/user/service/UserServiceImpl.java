@@ -5,10 +5,13 @@ import org.sparta.newsfeed.config.PasswordEncoder;
 import org.sparta.newsfeed.entity.User;
 import org.sparta.newsfeed.user.dto.LoginResponseDto;
 import org.sparta.newsfeed.user.dto.SignupResponseDto;
+import org.sparta.newsfeed.user.dto.UpdateRequestDto;
 import org.sparta.newsfeed.user.dto.UserResponseDto;
 import org.sparta.newsfeed.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -49,11 +52,37 @@ public class UserServiceImpl implements UserService {
 
         User foundUser = userRepository.findByIdOrElseThrow(userId);
 
-        return new UserResponseDto(
-                foundUser.getNickname(),
-                foundUser.getUserImage(),
-                foundUser.getSelfComment(),
-                (long) foundUser.getBoards().size(),
-                (long) (foundUser.getRequestedUsers().size() + foundUser.getPostedUsers().size()));
+        return new UserResponseDto(foundUser);
     }
+
+    @Override
+    @Transactional
+    public UserResponseDto updateUser(Long userId, UpdateRequestDto requestDto) {
+
+        User user = userRepository.findByIdOrElseThrow(userId);
+
+        user.setNickname(requestDto.getNickname());
+        user.setUserImage(requestDto.getUserImage());
+        user.setSelfComment(requestDto.getSelfComment());
+
+        //비밀번호 수정 -> oldPassword, newPassword 는 둘다 입력될 경우에만 수정
+        if (requestDto.getOldPassword() != null && requestDto.getNewPassword() != null){
+
+            if (passwordEncoder.matches(requestDto.getOldPassword(),user.getPassword())){
+                user.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
+            } else {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            }
+        } else if (requestDto.getOldPassword() == null && requestDto.getNewPassword() == null) {
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+
+
+        return new UserResponseDto(user);
+    }
+
+
 }

@@ -3,11 +3,13 @@ package org.sparta.newsfeed.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity {

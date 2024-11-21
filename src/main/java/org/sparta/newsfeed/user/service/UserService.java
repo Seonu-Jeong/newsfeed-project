@@ -2,6 +2,7 @@ package org.sparta.newsfeed.user.service;
 
 import org.sparta.newsfeed.user.dto.LoginResponseDto;
 import org.sparta.newsfeed.user.dto.SignupResponseDto;
+import org.sparta.newsfeed.user.dto.UpdateRequestDto;
 import org.sparta.newsfeed.user.dto.UserResponseDto;
 
 public interface UserService {
@@ -11,5 +12,7 @@ public interface UserService {
     LoginResponseDto login(String email, String password);
 
     UserResponseDto findUserById(Long userId);
+
+    UserResponseDto updateUser(Long userId, UpdateRequestDto requestDto);
 
 }
