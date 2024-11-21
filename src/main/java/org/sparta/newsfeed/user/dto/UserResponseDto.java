@@ -15,7 +15,7 @@ public class UserResponseDto {
 
     private Long friendCount;
 
-    public UserResponseDto(Long friendCount, Long postCount, String comment, String userImage, String nickname) {
+    public UserResponseDto(String nickname, String userImage, String comment, Long postCount, Long friendCount) {
         this.friendCount = friendCount;
         this.postCount = postCount;
         this.comment = comment;

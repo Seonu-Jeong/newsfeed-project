@@ -5,6 +5,7 @@ import org.sparta.newsfeed.config.PasswordEncoder;
 import org.sparta.newsfeed.entity.User;
 import org.sparta.newsfeed.user.dto.LoginResponseDto;
 import org.sparta.newsfeed.user.dto.SignupResponseDto;
+import org.sparta.newsfeed.user.dto.UserResponseDto;
 import org.sparta.newsfeed.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -44,4 +45,15 @@ public class UserServiceImpl implements UserService {
         return new LoginResponseDto(loginUser.getId());
     }
 
+    public UserResponseDto findUserById(Long userId){
+
+        User foundUser = userRepository.findByIdOrElseThrow(userId);
+
+        return new UserResponseDto(
+                foundUser.getNickname(),
+                foundUser.getUserImage(),
+                foundUser.getSelfComment(),
+                (long) foundUser.getBoards().size(),
+                (long) (foundUser.getRequestedUsers().size() + foundUser.getPostedUsers().size()));
+    }
 }

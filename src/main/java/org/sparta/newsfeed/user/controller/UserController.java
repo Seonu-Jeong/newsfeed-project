@@ -9,10 +9,7 @@ import org.sparta.newsfeed.user.dto.*;
 import org.sparta.newsfeed.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -28,7 +25,6 @@ public class UserController {
         SignupResponseDto signupResponseDto = userService.signup(requestDto.getEmail(), requestDto.getPassword(), requestDto.getNickname());
 
         return new ResponseEntity<>(signupResponseDto, HttpStatus.CREATED);
-
     }
 
     //로그인
@@ -58,7 +54,15 @@ public class UserController {
         }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
+    //유저 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> findUserById(@PathVariable(name = "id") Long userId) {
+
+        UserResponseDto foundUserDto = userService.findUserById(userId);
+
+        return new ResponseEntity<>(foundUserDto, HttpStatus.OK);
     }
 
 }
