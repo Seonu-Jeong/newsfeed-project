@@ -6,14 +6,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sparta.newsfeed.global.constant.Const;
 import org.sparta.newsfeed.domain.user.dto.*;
-import org.sparta.newsfeed.domain.user.dto.*;
 import org.sparta.newsfeed.domain.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -21,7 +21,11 @@ public class UserController {
 
     //회원 가입
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto) {
+    public ResponseEntity<SignupResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto, HttpServletRequest servletRequest) {
+
+        if (servletRequest.getSession(false) != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
 
         SignupResponseDto signupResponseDto = userService.signup(requestDto);
 
@@ -32,11 +36,17 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequestDto requestDto, HttpServletRequest servletRequest) {
 
+        if (servletRequest.getSession(false) != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
         //이메일, 비밀번호 확인
         LoginResponseDto loginDto = userService.login(requestDto);
 
         //세션요청
         HttpSession session = servletRequest.getSession();
+
+
 
         //세션 키 & Value 설정
         session.setAttribute(Const.LOGIN_USER, loginDto.getUserId());
