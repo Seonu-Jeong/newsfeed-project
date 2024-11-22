@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/board")
+@RequestMapping("/api/boards")
 public class BoardController {
 
     private final BoardService boardService;
@@ -60,13 +60,13 @@ public class BoardController {
                 .body(boardService.getBoard(board_Id));
     }
 
-    //선택 일정 수정
-    @PutMapping("/{board_Id}")
+    //선택 게시글 수정
+    @PatchMapping("/{board_Id}")
     public ResponseEntity<Void> updateBoard(
             @PathVariable Long board_Id,
             @RequestBody BoardRequestDto requestDto
     ){
-        boardService.updateTodo(board_Id, requestDto);
+        boardService.updateBoard(board_Id, requestDto);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
