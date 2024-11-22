@@ -51,8 +51,8 @@ public class BoardService {
     //페이징 적용 조회
     public BoardPageResponseDto getBoardListWithPaging(int page, int size, String criteria) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria));
-        Page<Board> todos = boardRepository.findAll(pageable);
-        return new BoardResponsePage(todos);
+        Page<Board> boards = boardRepository.findAll(pageable);
+        return new BoardPageResponseDto(boards);
     }
 
     //페이징 적용 친구 게시글 조회
@@ -82,7 +82,7 @@ public class BoardService {
     }
 
     @Transactional //영속성 안에서 엔티티가 바뀌면 자동저장
-    public void updateTodo(Long boardId, BoardRequestDto requestDto) {
+    public void updateBoard(Long boardId, BoardRequestDto requestDto) {
         Board board = boardRepository.findBoardById(boardId);
         board.updateData(requestDto);
     }
