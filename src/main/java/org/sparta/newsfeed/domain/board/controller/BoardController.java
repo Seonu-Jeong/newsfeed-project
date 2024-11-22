@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 //import org.sparta.newsfeed.board.service.BoardService;
 import org.sparta.newsfeed.domain.board.dto.BoardRequestDto;
 import org.sparta.newsfeed.domain.board.dto.BoardResponseDto;
-import org.sparta.newsfeed.domain.board.dto.BoardResponsePage;
+import org.sparta.newsfeed.domain.board.dto.BoardPageResponseDto;
 import org.sparta.newsfeed.domain.board.service.BoardService;
+import org.sparta.newsfeed.global.constant.Const;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +20,17 @@ public class BoardController {
 
     //일정 생성하기
     @PostMapping()
-    public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto requestDto){
+    public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto requestDto, @SessionAttribute(name = Const.LOGIN_USER) Long userId){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(boardService.createBoard(requestDto));
+                .body(boardService.createBoard(requestDto, userId));
     }
 
     //전체 일정 조회
     @GetMapping()
-    public ResponseEntity<BoardResponsePage> getBoardList(@RequestParam(required = false, defaultValue = "0") int page,
-                                                          @RequestParam(required = false, defaultValue = "10") int size,
-                                                          @RequestParam(required = false, defaultValue = "modifiedAt") String criteria){
+    public ResponseEntity<BoardPageResponseDto> getBoardList(@RequestParam(required = false, defaultValue = "0") int page,
+                                                             @RequestParam(required = false, defaultValue = "10") int size,
+                                                             @RequestParam(required = false, defaultValue = "modifiedAt") String criteria){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(boardService.getBoardListWithPaging(page, size, criteria));

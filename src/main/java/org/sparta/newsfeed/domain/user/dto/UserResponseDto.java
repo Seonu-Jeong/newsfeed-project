@@ -1,7 +1,10 @@
 package org.sparta.newsfeed.domain.user.dto;
 
 import lombok.Getter;
+import org.sparta.newsfeed.global.entity.Board;
 import org.sparta.newsfeed.global.entity.User;
+
+import java.util.List;
 
 @Getter
 public class UserResponseDto {
@@ -29,6 +32,6 @@ public class UserResponseDto {
         this.userImage = user.getUserImage();
         this.selfComment = user.getSelfComment();
         this.postCount = (long) user.getBoards().size();
-        this.friendCount = (long) (user.getRequestedUsers().size() + user.getPostedUsers().size());
+        this.friendCount = (long) (user.getRequestedUsers().size() + user.getPostedUsers().size()); //거절상태의 사이즈
     }
 }

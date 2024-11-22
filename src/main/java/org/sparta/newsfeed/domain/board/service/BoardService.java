@@ -3,9 +3,10 @@ package org.sparta.newsfeed.domain.board.service;
 import lombok.RequiredArgsConstructor;
 import org.sparta.newsfeed.domain.board.dto.BoardRequestDto;
 import org.sparta.newsfeed.domain.board.dto.BoardResponseDto;
-import org.sparta.newsfeed.domain.board.dto.BoardResponsePage;
+import org.sparta.newsfeed.domain.board.dto.BoardPageResponseDto;
 import org.sparta.newsfeed.domain.board.repository.BoardRepository;
 import org.sparta.newsfeed.global.entity.Board;
+import org.sparta.newsfeed.global.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,8 +24,15 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public BoardResponseDto createBoard(BoardRequestDto requestDto) {
-        Board savedboard = boardRepository.save(Board.from(requestDto));
+    public BoardResponseDto createBoard(BoardRequestDto requestDto, Long userId) {
+
+        User user = userRepository.findByIdOrElseThrow(userId);
+
+        Board board = Board.from(requestDto);
+
+        board.setUser(user);
+
+        Board savedboard = boardRepository.save(board);
         return savedboard.to();
     }
 
@@ -37,7 +45,7 @@ public class BoardService {
     }
 
     //페이징 적용 조회
-    public BoardResponsePage getBoardListWithPaging(int page, int size, String criteria) {
+    public BoardPageResponseDto getBoardListWithPaging(int page, int size, String criteria) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria));
         Page<Board> todos = boardRepository.findAll(pageable);
         return new BoardResponsePage(todos);

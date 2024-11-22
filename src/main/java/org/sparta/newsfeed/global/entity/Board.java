@@ -3,8 +3,12 @@ package org.sparta.newsfeed.global.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.sparta.newsfeed.domain.board.dto.BoardRequestDto;
 import org.sparta.newsfeed.domain.board.dto.BoardResponseDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -17,6 +21,7 @@ public class Board extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -28,9 +33,8 @@ public class Board extends BaseEntity{
     @Column(columnDefinition = "tinytext")
     private String postImage;
 
-
-    //@OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-   // private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     public static Board from(BoardRequestDto requestDto) {
         Board board = new Board();

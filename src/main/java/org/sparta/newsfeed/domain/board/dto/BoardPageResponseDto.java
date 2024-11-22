@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class BoardResponsePage {
+public class BoardPageResponseDto {
     private List<BoardResponseDto> boards;
     private int totalPages;
     private long totalElements;
 
-    public BoardResponsePage(Page<Board> page) {
+    public BoardPageResponseDto(Page<Board> page) {
         this.boards = page.getContent().stream()
                 .map(Board::to)
                 .collect(Collectors.toList());
