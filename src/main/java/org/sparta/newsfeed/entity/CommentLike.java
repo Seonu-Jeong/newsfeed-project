@@ -14,7 +14,15 @@ public class CommentLike extends BaseEntity{
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public CommentLike() {
+    }
+
+    public CommentLike(User user, Comment comment) {
+        this.comment = comment;
+        this.user = user;
+    }
 }
