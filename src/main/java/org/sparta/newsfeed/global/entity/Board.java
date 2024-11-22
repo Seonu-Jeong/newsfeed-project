@@ -36,6 +36,9 @@ public class Board extends BaseEntity{
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board",cascade = CascadeType.REMOVE)
+    private List<BoardLike> boardLike = new ArrayList<>();
+
     public static Board from(BoardRequestDto requestDto) {
         Board board = new Board();
         board.initData(requestDto);
