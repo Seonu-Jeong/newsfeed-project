@@ -125,6 +125,23 @@ public class FriendService {
 
     }
 
+    @Transactional
+    public void removeFriend(Long targetId, Long loginUserId) {
+
+        Friend friend = friendRepository.findByPostedUserIdAndRequestedUserId(targetId, loginUserId)
+                .orElse(null);
+
+        if(friend==null)
+            friend = friendRepository.findByPostedUserIdAndRequestedUserId(loginUserId, targetId)
+                    .orElseThrow(()->new NoExistException("존재하지 친구 관계입니다."));
+
+        if(friend.getState()!=FriendType.RELATION)
+            throw new AlreadyExistException("친구 관계가 아닙니다.");
+
+        friendRepository.delete(friend);
+
+    }
+
     private void setRelatedFriendInfo(List<FriendResponseDto> dtos, User loginUser) {
 
         List<User> loginUserFriends = getTargetsFriends(loginUser);
@@ -210,6 +227,7 @@ public class FriendService {
 
         return userList;
     }
+
 
 }
 
