@@ -38,7 +38,6 @@ public class FriendServiceImpl implements FriendService {
 
         List<FriendResponseDto> friendResponseDtos = convertToFriendResponseDto(
                 getTargetsFriends(targetUser).stream()
-                        .filter(user-> !user.getId().equals(loginUserId))
                         .toList()
         );
 
@@ -189,6 +188,9 @@ public class FriendServiceImpl implements FriendService {
             if (friend != null) {
                 relation = friend.getState();
             }
+
+            if(loginUser.getId().equals(friendId))
+                relation = FriendType.ME;
 
             dto.setFriendStatus(relation);
         }
