@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 public class CommentRequestDto {
 
-    @NotBlank(message = "빈칸아니어라")
+    @NotBlank
     String comment;
 }

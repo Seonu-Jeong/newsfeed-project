@@ -20,7 +20,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 댓글을 찾지 못했습니다 commentId : " + commentId)
         );
     }
-
-    boolean existsByUserAndBoardId(User userId, Board BoardId);
-
 }

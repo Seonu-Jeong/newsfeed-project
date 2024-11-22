@@ -20,14 +20,13 @@ public class CommentLikeService {
 
     private final CommentLikeRepository commentLikeRepository;
     private final UserRepository userRepository;
-    private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
     public void addLike(Long loginId, Long boardId, Long commentId) {
-        User loginUser = userRepository.findById(loginId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 아이디는 회원이 아닙니다. loginID : " + loginId));
+        User loginUser = userRepository.findByIdOrElseThrow(loginId);
         Comment comment = commentRepository.findByIdOrElseThrow(commentId);
 
-        AuthrizedPath(boardId, comment);
+        AuthorizedPath(boardId, comment);
 
         if (!commentLikeRepository.existsByUserAndComment(loginUser, comment)) {
             CommentLike commentLike = new CommentLike(loginUser, comment);
@@ -36,10 +35,10 @@ public class CommentLikeService {
     }
 
     public void deleteLike(Long loginId, Long boardId, Long commentId) {
-        User loginUser = userRepository.findById(loginId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 아이디는 회원이 아닙니다. loginID : " + loginId));
+        User loginUser = userRepository.findByIdOrElseThrow(loginId);
         Comment comment = commentRepository.findByIdOrElseThrow(commentId);
 
-        AuthrizedPath(boardId, comment);
+        AuthorizedPath(boardId, comment);
 
         Optional<CommentLike> byUserAndComment = commentLikeRepository.findByUserAndComment(loginUser, comment);
         if(byUserAndComment.isPresent()) {
@@ -48,7 +47,7 @@ public class CommentLikeService {
         }
     }
 
-    private static void AuthrizedPath(Long boardId, Comment comment) {
+    private static void AuthorizedPath(Long boardId, Comment comment) {
         if (!comment.getBoard().getId().equals(boardId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글의 경로가 맞지 않습니다. boardID : " + boardId);
         }

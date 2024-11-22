@@ -33,10 +33,8 @@ public class CommentService {
 
     public CommentResponseDto createComment(Long loginId, Long boardId, CommentRequestDto requestDto) {
 
-        User loginUser = userRepository.findById(loginId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 아이디는 회원이 아닙니다. loginID : " + loginId));
-        Board board = boardRepository.findById(boardId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 게시판은 존재하지 않습니다. boardID : " + boardId));
+        User loginUser = userRepository.findByIdOrElseThrow(loginId);
+        Board board = boardRepository.findBoardById(boardId);
 
         Comment comment = new Comment(requestDto.getComment(), loginUser, board);
         Comment saveComment = commentRepository.save(comment);
@@ -46,51 +44,41 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto updateComment(Long loginId, Long boardId, Long commentId, CommentRequestDto requestDto) {
-        User loginUser = userRepository.findById(loginId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 아이디는 회원이 아닙니다. loginID : " + loginId));
-        Board board = boardRepository.findById(boardId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 게시판은 존재하지 않습니다. boardId : " + boardId));
-
+        User loginUser = userRepository.findByIdOrElseThrow(loginId);
+        Board board = boardRepository.findBoardById(boardId);
         Comment comment = commentRepository.findByIdOrElseThrow(commentId);
-        if (checkAuthrizedComment(commentId, loginUser, comment)) {
 
-        }
+        checkUrlPath(board, comment);
+        checkAuthorizedComment(commentId, loginUser);
+
         comment.setComment(requestDto.getComment());
 
         return CommentResponseDto.toDto(comment);
     }
 
-    private static boolean checkAuthrizedComment(Long commentId, User loginUser, Comment comment) {
-        Comment findComment
-                = loginUser.getComments()
-                .stream()
-                .filter(c -> c.getId().equals(commentId))
-                .findAny()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "테스트"));
-
-        return comment.equals(findComment);
-    }
-
     public void deleteComment(Long loginId, Long boardId, Long commentId) {
-        Comment comment = AuthorizedComment(loginId, boardId, commentId);
+        User loginUser = userRepository.findByIdOrElseThrow(loginId);
+        Board board = boardRepository.findBoardById(boardId);
+        Comment comment = commentRepository.findByIdOrElseThrow(commentId);
+
+        checkUrlPath(board, comment);
+        checkAuthorizedComment(commentId, loginUser);
 
         commentRepository.delete(comment);
     }
 
+    private void checkAuthorizedComment(Long commentId, User loginUser) {
+        loginUser.getComments()
+                .stream()
+                .filter(c -> c.getId().equals(commentId))
+                .findAny()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "권한을 가지고 있지 않습니다."));
+    }
 
-
-    private Comment AuthorizedComment(Long loginId, Long boardId, Long commentId) {
-        User loginUser = userRepository.findById(loginId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 아이디는 회원이 아닙니다. loginID : " + loginId));
-        Board board = boardRepository.findById(boardId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 게시판은 존재하지 않습니다. boardId : " + boardId));
-        Comment comment = commentRepository.findByIdOrElseThrow(commentId);
-
+    private void checkUrlPath(Board board, Comment comment) {
         if (comment.getBoard() != board) {
-            String message = String.format("해당 경로는 맞지 않습니다. url : api/boards/%s/comments/%s ", boardId, commentId);
+            String message = String.format("해당 경로는 맞지 않습니다. url : api/boards/%s/comments/%s ", board.getId(), comment.getId());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, message);
         }
-
-        return comment;
     }
 }
