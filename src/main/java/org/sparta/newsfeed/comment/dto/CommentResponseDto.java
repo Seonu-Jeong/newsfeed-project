@@ -1,8 +1,6 @@
 package org.sparta.newsfeed.comment.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
-import org.hibernate.validator.constraints.Length;
 import org.sparta.newsfeed.entity.Comment;
 
 import java.time.LocalDateTime;
@@ -16,16 +14,19 @@ public class CommentResponseDto {
 
     private String comment;
 
+    private Long commentLikeCount;
+
     private LocalDateTime createAt;
 
     public static CommentResponseDto toDto(Comment comment) {
-        return new CommentResponseDto(comment.getId(), comment.getUser().getNickname(), comment.getComment(), comment.getCreatedAt());
+        return new CommentResponseDto(comment.getId(), comment.getUser().getNickname(), comment.getComment(), comment.getCreatedAt(), (long) comment.getCommentLike().size());
     }
 
-    public CommentResponseDto(Long id, String nikename, String comment, LocalDateTime createAt) {
+    public CommentResponseDto(Long id, String nikename, String comment, LocalDateTime createAt, Long commentLikeCount) {
         this.id = id;
         this.nikename = nikename;
         this.comment = comment;
         this.createAt = createAt;
+        this.commentLikeCount = commentLikeCount;
     }
 }
