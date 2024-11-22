@@ -18,7 +18,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    //일정 생성하기
+    //게시글 생성하기
     @PostMapping()
     public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto requestDto, @SessionAttribute(name = Const.LOGIN_USER) Long userId){
         return ResponseEntity
@@ -26,7 +26,7 @@ public class BoardController {
                 .body(boardService.createBoard(requestDto, userId));
     }
 
-    //전체 일정 조회
+    //전체 게시글 조회
     @GetMapping()
     public ResponseEntity<BoardPageResponseDto> getBoardList(@RequestParam(required = false, defaultValue = "0") int page,
                                                              @RequestParam(required = false, defaultValue = "10") int size,
@@ -36,7 +36,21 @@ public class BoardController {
                 .body(boardService.getBoardListWithPaging(page, size, criteria));
     }
 
-    //선택 일정 조회
+    //친구 게시글 조회
+    @GetMapping("/friends")
+    public ResponseEntity<List<BoardResponseDto>> getBoardList(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "modifiedAt") String criteria,
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId
+    ){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(boardService.getFriendsBoardList(page, size, criteria, userId));
+    }
+
+
+    //선택 게시글 조회
     @GetMapping("/{board_Id}")
     public ResponseEntity<BoardResponseDto>getTodo(@PathVariable Long board_Id){
         return ResponseEntity
@@ -57,7 +71,7 @@ public class BoardController {
 
     }
 
-    //선택 일정 삭제
+    //선택 게시글 삭제
     @DeleteMapping("/{board_id}")
     public ResponseEntity<Void> deleteBoard(
             @PathVariable Long board_id

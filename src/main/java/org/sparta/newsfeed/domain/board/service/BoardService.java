@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.sparta.newsfeed.domain.friend.service.impl.FriendServiceImpl.getTargetsFriends;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -49,6 +51,27 @@ public class BoardService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, criteria));
         Page<Board> todos = boardRepository.findAll(pageable);
         return new BoardResponsePage(todos);
+    }
+
+    //페이징 적용 친구 게시글 조회
+    public List<BoardResponseDto> getFriendsBoardList(int page, int size, String criteria, Long userId) {
+
+        String sort = "modified_at";
+
+        if(!criteria.equals("ModifiedAt"))
+            sort = "";
+
+        List<Board> boards = boardRepository.findFriendsBoardList(userId, sort, size, page*size);
+
+        return boards.stream()
+                .map(board -> new BoardResponseDto(
+                        board.getId(),
+                        board.getPostImage(),
+                        board.getPostBody(),
+                        board.getModifiedAt()
+                ))
+            .toList();
+
     }
 
     public BoardResponseDto getTodo(Long boardId) {
