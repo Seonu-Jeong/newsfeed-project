@@ -208,7 +208,7 @@ public class FriendServiceImpl implements FriendService {
 
     }
 
-    private List<User> getTargetsFriends(User targetUser) {
+    public static List<User> getTargetsFriends(User targetUser) {
         List<User> userList = new ArrayList<>();
 
         userList.addAll(
