@@ -1,6 +1,8 @@
 package org.sparta.newsfeed.comment.repository;
 
+import org.sparta.newsfeed.entity.Board;
 import org.sparta.newsfeed.entity.Comment;
+import org.sparta.newsfeed.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
@@ -18,4 +20,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 댓글을 찾지 못했습니다 commentId : " + commentId)
         );
     }
+
+    boolean existsByUserAndBoardId(User userId, Board BoardId);
+
 }

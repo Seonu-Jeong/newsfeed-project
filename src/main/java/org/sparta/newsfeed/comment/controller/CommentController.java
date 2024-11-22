@@ -63,9 +63,9 @@ public class CommentController {
         commentService.deleteComment(loginId, boardId, commentId);
     }
 
-    private static void getLoginId(HttpServletRequest request) {
+    private Long getLoginId(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Long loginId = (Long) session.getAttribute(LOGIN_USER);
+        return (Long) session.getAttribute(LOGIN_USER);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
