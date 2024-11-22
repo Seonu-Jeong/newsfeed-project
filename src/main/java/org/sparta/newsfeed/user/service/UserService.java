@@ -1,31 +1,16 @@
 package org.sparta.newsfeed.user.service;
 
-import lombok.RequiredArgsConstructor;
-import org.sparta.newsfeed.entity.User;
-import org.sparta.newsfeed.user.dto.SignupResponseDto;
-import org.sparta.newsfeed.user.repository.UserRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.sparta.newsfeed.user.dto.*;
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
+public interface UserService {
 
-    private final UserRepository userRepository;
+    SignupResponseDto signup (SignupRequestDto requestDto);
 
-    public SignupResponseDto signup (String email, String password, String nickname) {
+    LoginResponseDto login(LoginRequestDto requestDto);
 
-        if (userRepository.existsByEmail(email)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하는 이메일입니다.");
-        }
+    UserResponseDto findUserById(Long userId);
 
-        User user = new User(email, password, nickname);
+    UserResponseDto updateUser(Long userId, UpdateRequestDto requestDto);
 
-        User savedUser = userRepository.save(user);
-
-        return new SignupResponseDto(savedUser.getEmail(), savedUser.getNickname());
-
-    }
-
+    void deleteUser(Long userId, DeleteUserRequestDto requestDto);
 }

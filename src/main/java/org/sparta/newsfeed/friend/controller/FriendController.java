@@ -5,10 +5,11 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.sparta.newsfeed.constant.Const;
 import org.sparta.newsfeed.friend.dto.ErrorResponseDto;
+import org.sparta.newsfeed.friend.dto.FriendRelationResponseDto;
+import org.sparta.newsfeed.friend.dto.FriendResponseDto;
 import org.sparta.newsfeed.friend.dto.RequestAcceptResponseDto;
-import org.sparta.newsfeed.friend.dto.RequestFriendResponseDto;
+import org.sparta.newsfeed.friend.exception.AlreadyExistException;
 import org.sparta.newsfeed.friend.exception.NoAuthorizationException;
-import org.sparta.newsfeed.friend.dto.UserFriendResponseDto;
 import org.sparta.newsfeed.friend.exception.NoExistException;
 import org.sparta.newsfeed.friend.service.FriendService;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class FriendController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{targetId}")
-    public List<UserFriendResponseDto> getUsersFriendList(
+    public List<FriendRelationResponseDto> getUsersFriendList(
         @PathVariable Long targetId,
         HttpServletRequest request
     ){
@@ -42,8 +43,7 @@ public class FriendController {
 
         Long loginUserId = (Long)session.getAttribute(Const.LOGIN_USER);
 
-        //return friendService.findUsersFriendList(targetId, loginUserId);
-        return null;
+        return friendService.findUsersFriendList(targetId, loginUserId);
     }
 
 
@@ -57,7 +57,7 @@ public class FriendController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/requests/{userId}")
-    public List<RequestFriendResponseDto> getRequestFriendList(
+    public List<FriendResponseDto> getRequestFriendList(
             @PathVariable Long userId,
             HttpServletRequest request
     ){
@@ -69,8 +69,7 @@ public class FriendController {
             throw new NoAuthorizationException("로그인 사용자와 일치하지 않은 아이디입니다.");
         }
 
-        //return friendService.findRequestFriends(userId);
-        return null;
+        return friendService.findRequestFriends(userId);
     }
 
 
@@ -81,7 +80,7 @@ public class FriendController {
      * @param request Http 요청 객체
      */
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/request/{targetId}")
+    @PostMapping("/requests/{targetId}")
     public void requestFriend(
             @PathVariable Long targetId,
             HttpServletRequest request
@@ -90,7 +89,7 @@ public class FriendController {
 
         Long loginUserId = (Long)session.getAttribute(Const.LOGIN_USER);
 
-        //friendService.sendFriendRequest(targetId, loginUserId);
+        friendService.sendFriendRequest(targetId, loginUserId);
 
     }
 
@@ -105,7 +104,7 @@ public class FriendController {
      */
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/requests/{targetId}")
-    public RequestAcceptResponseDto accectFriendRequest(
+    public RequestAcceptResponseDto acceptFriendRequest(
             @PathVariable Long targetId,
             HttpServletRequest request
     ){
@@ -113,8 +112,7 @@ public class FriendController {
 
         Long loginUserId = (Long)session.getAttribute(Const.LOGIN_USER);
 
-        //return friendService.acceptRequest(targetId, loginUserId);
-        return null;
+        return friendService.acceptRequest(targetId, loginUserId);
     }
 
     /**
@@ -133,7 +131,27 @@ public class FriendController {
 
         Long loginUserId = (Long)session.getAttribute(Const.LOGIN_USER);
 
-        //friendService.refuseRequset(targetId, loginUserId);
+        friendService.refuseRequset(targetId, loginUserId);
+    }
+
+
+    /**
+     * 친구 관계 삭제 api 메소드
+     *
+     * @param targetId 삭제할 친구 아이디
+     * @param request Http 요청 객체
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/{targetId}")
+    public void removeFriend(
+            @PathVariable Long targetId,
+            HttpServletRequest request
+    ){
+        HttpSession session = request.getSession(false);
+
+        Long loginUserId = (Long)session.getAttribute(Const.LOGIN_USER);
+
+        friendService.removeFriend(targetId, loginUserId);
     }
 
     @ExceptionHandler({NoAuthorizationException.class})
@@ -144,5 +162,10 @@ public class FriendController {
     @ExceptionHandler({NoExistException.class})
     public ResponseEntity<ErrorResponseDto> noExistExceptionHandler(Exception e){
         return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({AlreadyExistException.class})
+    public ResponseEntity<ErrorResponseDto> alreadyExistExceptionHandler(Exception e){
+        return new ResponseEntity<>(new ErrorResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
