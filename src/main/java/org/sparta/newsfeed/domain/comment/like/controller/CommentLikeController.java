@@ -18,25 +18,20 @@ public class CommentLikeController {
     private final CommentLikeService commentLikeService;
 
     @PostMapping("/{boardId}/comments/{commentId}/like")
-    public ResponseEntity<Void> addLike(@PathVariable Long boardId, @PathVariable Long commentId, HttpServletRequest request) {
-        Long loginId = 1L; // = getLoginId(request);
-
+    public ResponseEntity<Void> addLike(@PathVariable Long boardId,
+                                        @PathVariable Long commentId,
+                                        @SessionAttribute(name = LOGIN_USER) Long loginId) {
         commentLikeService.addLike(loginId, boardId, commentId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}/comments/{commentId}/like")
-    public ResponseEntity<Void> deleteLike(@PathVariable Long boardId, @PathVariable Long commentId, HttpServletRequest request) {
-        Long loginId = 1L; // = getLoginId(request);
-
+    public ResponseEntity<Void> deleteLike(@PathVariable Long boardId,
+                                           @PathVariable Long commentId,
+                                           @SessionAttribute(name = LOGIN_USER) Long loginId) {
         commentLikeService.deleteLike(loginId, boardId, commentId);
 
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    private Long getLoginId(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        return (Long) session.getAttribute(LOGIN_USER);
     }
 }

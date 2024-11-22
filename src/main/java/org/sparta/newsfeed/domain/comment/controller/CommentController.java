@@ -26,7 +26,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @GetMapping("/{boardId}/comment")
+    @GetMapping("/{boardId}/comments")
     public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable Long boardId) {
         List<CommentResponseDto> comments = commentService.getComments(boardId);
 
@@ -36,8 +36,7 @@ public class CommentController {
     @PostMapping("/{boardId}/comments")
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long boardId,
                                                             @Validated @RequestBody CommentRequestDto requestDto,
-                                                            HttpServletRequest request) {
-        Long loginId = 1L; //  getLoginId(request);
+                                                            @SessionAttribute(name = LOGIN_USER) Long loginId) {
         CommentResponseDto responseDto = commentService.createComment(loginId, boardId, requestDto);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -47,9 +46,7 @@ public class CommentController {
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long boardId,
                                                             @PathVariable Long commentId,
                                                             @Valid @RequestBody CommentRequestDto requestDto,
-                                                            HttpServletRequest request)
-    {
-        Long loginId = 1L; //  getLoginId(request);
+                                                            @SessionAttribute(name = LOGIN_USER) Long loginId){
         CommentResponseDto responseDto = commentService.updateComment(loginId, boardId, commentId, requestDto);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -57,15 +54,9 @@ public class CommentController {
 
     @DeleteMapping("/{boardId}/comments/{commentId}")
     public void deleteComment(@PathVariable Long boardId,
-                                              @PathVariable Long commentId,
-                                              HttpServletRequest request) {
-        Long loginId = 1L; //  getLoginId(request);
+                              @PathVariable Long commentId,
+                              @SessionAttribute(name = LOGIN_USER) Long loginId) {
         commentService.deleteComment(loginId, boardId, commentId);
-    }
-
-    private Long getLoginId(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        return (Long) session.getAttribute(LOGIN_USER);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
