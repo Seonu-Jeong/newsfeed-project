@@ -6,6 +6,8 @@ import org.sparta.newsfeed.global.entity.User;
 
 import java.util.List;
 
+import static org.sparta.newsfeed.domain.friend.service.impl.FriendServiceImpl.getTargetsFriends;
+
 @Getter
 public class UserResponseDto {
 
@@ -32,6 +34,6 @@ public class UserResponseDto {
         this.userImage = user.getUserImage();
         this.selfComment = user.getSelfComment();
         this.postCount = (long) user.getBoards().size();
-        this.friendCount = (long) (user.getRequestedUsers().size() + user.getPostedUsers().size()); //거절상태의 사이즈
+        this.friendCount = (long) (getTargetsFriends(user).size()); //거절상태의 사이즈
     }
 }
