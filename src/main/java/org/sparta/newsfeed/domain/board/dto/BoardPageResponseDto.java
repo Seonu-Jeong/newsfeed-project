@@ -20,4 +20,11 @@ public class BoardPageResponseDto {
         this.totalPages = page.getTotalPages();
         this.totalElements = page.getTotalElements();
     }
+
+    public BoardPageResponseDto(List<Board> board) {
+        boards = board.stream()
+                .map(Board::to)
+                .toList();
+
+    }
 }

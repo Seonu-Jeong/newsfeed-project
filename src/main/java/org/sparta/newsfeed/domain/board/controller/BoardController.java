@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/board")
@@ -52,10 +54,10 @@ public class BoardController {
 
     //선택 게시글 조회
     @GetMapping("/{board_Id}")
-    public ResponseEntity<BoardResponseDto>getTodo(@PathVariable Long board_Id){
+    public ResponseEntity<BoardResponseDto>getBoard(@PathVariable Long board_Id){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(boardService.getTodo(board_Id));
+                .body(boardService.getBoard(board_Id));
     }
 
     //선택 일정 수정

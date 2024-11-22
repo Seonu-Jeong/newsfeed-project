@@ -5,6 +5,7 @@ import org.sparta.newsfeed.domain.board.dto.BoardRequestDto;
 import org.sparta.newsfeed.domain.board.dto.BoardResponseDto;
 import org.sparta.newsfeed.domain.board.dto.BoardPageResponseDto;
 import org.sparta.newsfeed.domain.board.repository.BoardRepository;
+import org.sparta.newsfeed.domain.user.repository.UserRepository;
 import org.sparta.newsfeed.global.entity.Board;
 import org.sparta.newsfeed.global.entity.User;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import static org.sparta.newsfeed.domain.friend.service.impl.FriendServiceImpl.g
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto requestDto, Long userId) {
@@ -74,7 +76,7 @@ public class BoardService {
 
     }
 
-    public BoardResponseDto getTodo(Long boardId) {
+    public BoardResponseDto getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + boardId));
         return board.to();
     }
