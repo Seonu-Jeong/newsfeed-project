@@ -10,15 +10,10 @@ import java.time.LocalDateTime;
 @Getter
 public class CommentResponseDto {
 
-    @NotBlank
     private Long id;
 
-    @NotBlank
-    @Length(max = 30)
     private String nikename;
 
-    @NotBlank
-    @Length(max = 255)
     private String comment;
 
     private LocalDateTime createAt;
