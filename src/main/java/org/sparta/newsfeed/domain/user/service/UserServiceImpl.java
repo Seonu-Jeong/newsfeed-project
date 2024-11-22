@@ -1,11 +1,10 @@
 package org.sparta.newsfeed.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.sparta.newsfeed.global.config.PasswordEncoder;
 import org.sparta.newsfeed.domain.user.dto.*;
-import org.sparta.newsfeed.global.entity.User;
-import org.sparta.newsfeed.user.dto.*;
 import org.sparta.newsfeed.domain.user.repository.UserRepository;
+import org.sparta.newsfeed.global.config.PasswordEncoder;
+import org.sparta.newsfeed.global.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

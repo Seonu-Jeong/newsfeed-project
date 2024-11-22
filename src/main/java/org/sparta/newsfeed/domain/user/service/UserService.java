@@ -1,7 +1,6 @@
 package org.sparta.newsfeed.domain.user.service;
 
 import org.sparta.newsfeed.domain.user.dto.*;
-import org.sparta.newsfeed.user.dto.*;
 
 public interface UserService {
 

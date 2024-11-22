@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sparta.newsfeed.global.constant.Const;
 import org.sparta.newsfeed.domain.user.dto.*;
-import org.sparta.newsfeed.user.dto.*;
+import org.sparta.newsfeed.domain.user.dto.*;
 import org.sparta.newsfeed.domain.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
