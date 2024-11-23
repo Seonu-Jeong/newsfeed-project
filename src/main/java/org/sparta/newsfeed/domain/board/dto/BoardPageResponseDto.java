@@ -15,7 +15,7 @@ public class BoardPageResponseDto {
 
     public BoardPageResponseDto(Page<Board> page) {
         this.boards = page.getContent().stream()
-                .map(Board::to)
+                .map(Board::toDto)
                 .collect(Collectors.toList());
         this.totalPages = page.getTotalPages();
         this.totalElements = page.getTotalElements();
@@ -23,7 +23,7 @@ public class BoardPageResponseDto {
 
     public BoardPageResponseDto(List<Board> board) {
         boards = board.stream()
-                .map(Board::to)
+                .map(Board::toDto)
                 .toList();
 
     }

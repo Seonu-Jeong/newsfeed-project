@@ -50,12 +50,13 @@ public class Board extends BaseEntity{
         this.postImage = requestDto.getPostImage();
     }
 
-    public BoardResponseDto to() {
+    public BoardResponseDto toDto() {
         return new BoardResponseDto(
-                id,
-                postImage,
-                postBody,
-                getCreatedAt()
+                this.id,
+                this.postImage,
+                this.postBody,
+                (long) this.boardLike.size(),
+                this.getCreatedAt()
         );
     }
 
