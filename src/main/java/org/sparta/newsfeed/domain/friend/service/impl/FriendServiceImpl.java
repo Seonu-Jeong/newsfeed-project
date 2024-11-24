@@ -133,7 +133,7 @@ public class FriendServiceImpl implements FriendService {
 
         if(friend==null)
             friend = friendRepository.findByPostedUserIdAndRequestedUserId(loginUserId, targetId)
-                    .orElseThrow(()->new NoExistException("존재하지 친구 관계입니다."));
+                    .orElseThrow(()->new NoExistException("존재하지 않는 친구 관계입니다."));
 
         if(friend.getState()!=FriendType.RELATION)
             throw new AlreadyExistException("친구 관계가 아닙니다.");
