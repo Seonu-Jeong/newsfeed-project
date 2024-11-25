@@ -84,15 +84,27 @@ public class BoardService {
         return board.toDto();
     }
 
+    private void checkAuthorizedBoard(Long boardId, User loginUser) {
+        loginUser.getBoards()
+                .stream()
+                .filter(c -> c.getId().equals(boardId))
+                .findAny()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "권한을 가지고 있지 않습니다."));
+    }
+
     @Transactional //영속성 안에서 엔티티가 바뀌면 자동저장
-    public void updateBoard(Long boardId, BoardRequestDto requestDto) {
+    public void updateBoard(Long loginId, Long boardId, BoardRequestDto requestDto) {
+        User loginUser = userRepository.findByIdOrElseThrow(loginId);
         Board board = boardRepository.findBoardById(boardId);
         board.updateData(requestDto);
+        checkAuthorizedBoard(boardId, loginUser);
     }
 
     @Transactional
-    public void deleteBoard(Long boardId) {
+    public void deleteBoard(Long loginId,Long boardId) {
+        User loginUser = userRepository.findByIdOrElseThrow(loginId);
         boardRepository.findBoardById(boardId);
         boardRepository.deleteById(boardId);
+        checkAuthorizedBoard(boardId, loginUser);
     }
 }

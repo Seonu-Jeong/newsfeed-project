@@ -65,4 +65,5 @@ public class Board extends BaseEntity{
         this.postBody = requestDto.getPostBody();
 
     }
+
 }
