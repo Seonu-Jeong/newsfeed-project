@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.sparta.newsfeed.global.constant.Const.LOGIN_USER;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/boards")
@@ -64,9 +66,10 @@ public class BoardController {
     @PatchMapping("/{board_Id}")
     public ResponseEntity<Void> updateBoard(
             @PathVariable Long board_Id,
-            @RequestBody BoardRequestDto requestDto
+            @RequestBody BoardRequestDto requestDto,
+            @SessionAttribute(name = LOGIN_USER) Long loginId
     ){
-        boardService.updateBoard(board_Id, requestDto);
+        boardService.updateBoard(loginId,board_Id, requestDto);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -76,9 +79,10 @@ public class BoardController {
     //선택 게시글 삭제
     @DeleteMapping("/{board_id}")
     public ResponseEntity<Void> deleteBoard(
-            @PathVariable Long board_id
+            @PathVariable Long board_id,
+            @SessionAttribute(name = LOGIN_USER) Long loginId
     ){
-        boardService.deleteBoard(board_id);
+        boardService.deleteBoard(loginId, board_id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
